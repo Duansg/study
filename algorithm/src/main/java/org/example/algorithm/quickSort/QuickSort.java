@@ -1,5 +1,9 @@
 package org.example.algorithm.quickSort;
 
+import com.alibaba.fastjson.JSON;
+
+import java.util.Arrays;
+
 /**
  * QuickSort
  *
@@ -28,15 +32,41 @@ public class QuickSort {
             就这样交替进行，直到空位前面的值都小于基准值，空位后面的值都大于基准值为止。
      */
     public static void main(String[] args) {
-        int[] a = {8,3,10,2,7,6,9,12};
-        quickSort(a,0,a.length);
+        int[] n = {8,3,10,2,7,6,9,12};
+        quickSort(n,0,n.length-1);
+        System.out.println(JSON.toJSONString(n));
     }
 
-    private static void quickSort(int[] a, int i, int length) {
-
-
-
-
+    private static void quickSort(int[] arr, int l, int r) {
+        if (l >= r) return ;
+        // x  : 记录从前向后扫描的位置
+        // y  : 记录从后向前扫描的位置
+        // z  : 基准值，选择待排序区间的第一个元素
+        int x = l, y = r, z = arr[l];
+        //保证头指针不能大于尾指针,如果相等就说明头尾指针重合了，因为是同时扫描的，所以头指针<尾指针
+        while (x < y){
+            //先从后开始扫描,如果大于就步进1位,直到找到尾部小于基准位的，因为是内部扫描的，也要保证头指针<尾指针
+            while (x < y && arr[y] >= z){
+                --y;
+            }
+            if (x < y) {//头指针<尾指针
+                arr[x] = arr[y];
+                x++;//这个位置是空位
+            }
+            while (x < y && arr[x] <= z) {
+                ++x;
+            }
+            if (x < y){
+                arr[y] = arr[x];
+                y--;
+            }
+        }
+        // 将基准值 z 放入其正确位置数组的 x 位
+        // 其实，此时 x==y，所以写成 arr[y] = z 也行
+        // 再分别对左右区间，进行快速排序
+        arr[x] = z;
+        quickSort(arr, l, x - 1);
+        quickSort(arr, x + 1, r);
     }
 }
 
